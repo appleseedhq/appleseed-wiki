@@ -1,0 +1,33 @@
+--- libs/filesystem/src/windows_file_codecvt.hpp
++++ libs/filesystem/src/windows_file_codecvt.hpp
+@@ -26,8 +26,8 @@
+     : public std::codecvt< wchar_t, char, std::mbstate_t >  
+   {
+   public:
+-    explicit windows_file_codecvt()
+-        : std::codecvt<wchar_t, char, std::mbstate_t>() {}
++    explicit windows_file_codecvt(size_t refs = 0)
++        : std::codecvt<wchar_t, char, std::mbstate_t>(refs) {}
+   protected:
+
+     virtual bool do_always_noconv() const throw() { return false; }
+--- libs/filesystem/src/path.cpp
++++ libs/filesystem/src/path.cpp
+@@ -801,7 +801,7 @@
+   inline std::locale default_locale()
+   {
+     std::locale global_loc = std::locale();
+-    std::locale loc(global_loc, new windows_file_codecvt);
++    std::locale loc(global_loc, new windows_file_codecvt(1));
+     return loc;
+   }
+
+@@ -822,7 +822,7 @@
+
+ #elif defined(BOOST_WINDOWS_API) && !defined(BOOST_FILESYSTEM_STATIC_LINK)
+
+-  std::locale path_locale(std::locale(), new windows_file_codecvt); 
++  std::locale path_locale(std::locale(), new windows_file_codecvt(1)); 
+
+   const std::codecvt<wchar_t, char, std::mbstate_t>*
+     codecvt_facet_ptr(&std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >

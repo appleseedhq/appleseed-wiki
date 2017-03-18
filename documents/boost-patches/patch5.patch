@@ -1,0 +1,33 @@
+--- boost/config/auto_link.hpp	2013-09-17 18:55:51.000000000 +0200
++++ boost/config/auto_link.hpp	2016-09-25 17:34:00.468448300 +0200
+@@ -156,11 +156,16 @@
+      // vc11:
+ #    define BOOST_LIB_TOOLSET "vc110"
+ 
+-#  elif defined(BOOST_MSVC)
++#  elif defined(BOOST_MSVC) && (BOOST_MSVC < 1900)
+ 
+      // vc12:
+ #    define BOOST_LIB_TOOLSET "vc120"
+ 
++#  elif defined(BOOST_MSVC)
++
++     // vc14:
++#    define BOOST_LIB_TOOLSET "vc140"
++
+ #  elif defined(__BORLANDC__)
+ 
+      // CBuilder 6:
+--- boost/config/compiler/visualc.hpp	2013-10-25 23:57:04.000000000 +0200
++++ boost/config/compiler/visualc.hpp	2016-09-25 00:46:31.468821100 +0200
+@@ -266,8 +266,8 @@
+ #endif
+ 
+ //
+-// last known and checked version is 18.00.20827.3 (VC12 RC, aka 2013 RC):
+-#if (_MSC_VER > 1800 && _MSC_FULL_VER > 180020827)
++// last known and checked version is 19.00.24213 (VC15 update 3):
++#if (_MSC_VER > 1800 && _MSC_FULL_VER > 190024213)
+ #  if defined(BOOST_ASSERT_CONFIG)
+ #     error "Unknown compiler version - please run the configure tests and report the results"
+ #  else

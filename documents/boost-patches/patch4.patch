@@ -1,0 +1,18 @@
+--- boost/thread/win32/shared_mutex.hpp	2013-03-23 02:48:21.000000000 +0100
++++ boost/thread/win32/shared_mutex.hpp	2016-07-28 13:51:35.433426400 +0200
+@@ -733,6 +733,7 @@
+                 new_state.upgrade=false;
+                 bool const last_reader=!--new_state.shared_count;
+ 
++                new_state.shared_waiting=0;
+                 if(last_reader)
+                 {
+                     if(new_state.exclusive_waiting)
+@@ -740,7 +741,6 @@
+                         --new_state.exclusive_waiting;
+                         new_state.exclusive_waiting_blocked=false;
+                     }
+-                    new_state.shared_waiting=0;
+                 }
+ 
+                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
