@@ -1,0 +1,25 @@
+--- a/converter/builtin_converters.cpp
++++ b/converter/builtin_converters.cpp
+@@ -38,13 +38,18 @@ void shared_ptr_deleter::operator()(void const*)
+ namespace
+ {
+ 
+-  // An lvalue conversion function which extracts a char const* from a
++   // An lvalue conversion function which extracts a char const* from a
+   // Python String.
+ #if PY_VERSION_HEX < 0x03000000
+   void* convert_to_cstring(PyObject* obj)
+   {
+       return PyString_Check(obj) ? PyString_AsString(obj) : 0;
+   }
++#elif PY_VERSION_HEX < 0x03070000
++  void* convert_to_cstring(PyObject* obj)
++  {
++      return PyUnicode_Check(obj) ? _PyUnicode_AsString(obj) : 0;
++  }
+ #else
+   void* convert_to_cstring(PyObject* obj)
+   {
+-- 
+2.20.1.windows.1
+
